@@ -1,7 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class DamegeTrigger : MonoBehaviour
+public class DamageTrigger : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {

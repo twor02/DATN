@@ -6,11 +6,16 @@ public class Player : MonoBehaviour
 {
     private Rigidbody2D rb;
     private Animator anim;
+    private CapsuleCollider2D cd;
+
+    private bool canBeControlled = false;
 
     [Header("Movement")]
     [SerializeField] private float speed;
     [SerializeField] private float jumpForce;
     [SerializeField] private float doubleJumpForce;
+    private bool canDoubleJump;
+    private float defaultGravityScale;
 
     [Header("Wall Interaction")]
     [SerializeField] private float wallJumpDuration = 0.6f;
@@ -38,25 +43,32 @@ public class Player : MonoBehaviour
 
     private float xInput;
     private float yInput;
-    private bool canDoubleJump;
+    
 
     private bool facingRight = true;
     private int facingDir = 1;
+
+    [Header("VFX")]
+    [SerializeField] private GameObject deathVfx;
    
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        cd = GetComponent<CapsuleCollider2D>();
         anim = GetComponentInChildren<Animator>();
     }
     void Start()
     {
-        
+        defaultGravityScale = rb.gravityScale;
+        RespawnFinished(false);
     }
 
     // Update is called once per frame
     void Update()
     {
         UpdateAirborneStatus();
+
+        if (canBeControlled == false) return;
 
         if(isKnocked) return;
 
@@ -68,6 +80,22 @@ public class Player : MonoBehaviour
         HandleAnimation();
     }
 
+    public void RespawnFinished(bool finished)
+    {
+        if (finished)
+        {
+            rb.gravityScale = defaultGravityScale;
+            canBeControlled = true;
+            cd.enabled = true;
+        }
+        else
+        {
+            rb.gravityScale = 0;
+            canBeControlled = false;
+            cd.enabled = false;
+        }
+    }
+
     public void KnockBack()
     {
         if (isKnocked) return;
@@ -76,6 +104,14 @@ public class Player : MonoBehaviour
         anim.SetTrigger("knockBack");
         rb.linearVelocity = new Vector2(knockbackPower.x * -facingDir, knockbackPower.y);
     }
+
+    public void Die()
+    {
+        GameObject newDeathVfx = Instantiate(deathVfx, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+    }
+
+
     private IEnumerator KnockBackRroutine()
     {
         isKnocked = true;
