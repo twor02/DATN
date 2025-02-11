@@ -44,11 +44,11 @@ TagManager:
   - name: BackGround
     uniqueID: 1803707389
     locked: 0
-  - name: Ground
-    uniqueID: 1167111843
-    locked: 0
   - name: Trap
     uniqueID: 1064126033
+    locked: 0
+  - name: Ground
+    uniqueID: 1167111843
     locked: 0
   - name: Enemy
     uniqueID: 1563585001

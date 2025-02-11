@@ -8,7 +8,7 @@ public class DamageTrigger : MonoBehaviour
         Player player = collision.gameObject.GetComponent<Player>();
         if(player != null)
         {
-            player.KnockBack();
+            player.KnockBack(transform.position.x);
         }
     }
 }
