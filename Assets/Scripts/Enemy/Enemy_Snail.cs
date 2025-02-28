@@ -45,7 +45,7 @@ public class Enemy_Snail : Enemies
 
     private void HandleTurnAround()
     {
-        bool canFlipFromLedge = !isGroundInFrontDetected && hasBody;
+        bool canFlipFromLedge = !isGroundInfrontDetected && hasBody;
         if (canFlipFromLedge || isWallDetected)
         {
             Flip();

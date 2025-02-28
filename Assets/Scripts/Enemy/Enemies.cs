@@ -32,7 +32,7 @@ public class Enemies : MonoBehaviour
     protected bool isPlayerDetected;
     protected bool isGrounded;
     protected bool isWallDetected;
-    protected bool isGroundInFrontDetected;
+    protected bool isGroundInfrontDetected;
 
     protected int facingDir = -1;
     protected bool facingRight = false;
@@ -126,7 +126,7 @@ public class Enemies : MonoBehaviour
     protected virtual void HandleCollision()
     {
         isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
-        isGroundInFrontDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
+        isGroundInfrontDetected = Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, whatIsGround);
         isWallDetected = Physics2D.Raycast(transform.position, Vector2.right * facingDir, wallCheckDistance, whatIsGround);
         isPlayerDetected = Physics2D.Raycast(transform.position, Vector2.right * facingDir, playerDectectionDistance, whatIsPlayer);
 

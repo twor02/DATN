@@ -249,16 +249,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 550378473e3e28847a04ac36ca80d11a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damamgeTrigger: {fileID: 341877270919958306}
   moveSpeed: 3
   idleDuration: 1.5
-  deathImpact: 5
+  deathImpactSpeed: 5
   deathRotationSpeed: 150
   groundCheckDistance: 1.04
   wallCheckDistance: 0.8
+  playerDectectionDistance: 7
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 0
   groundCheck: {fileID: 5927068825613903993}
 --- !u!61 &7837378830562903025
 BoxCollider2D:

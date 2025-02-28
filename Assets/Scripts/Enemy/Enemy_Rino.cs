@@ -33,7 +33,7 @@ public class Enemy_Rino : Enemies
         if (isWallDetected)
             wallHit();
 
-        if (!isGroundInFrontDetected)
+        if (!isGroundInfrontDetected)
             TurnAround();
     }
 

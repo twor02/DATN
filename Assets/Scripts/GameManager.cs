@@ -1,9 +1,14 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
+
+    [Header("Level Managment")]
+    [SerializeField] private int currentLevelIndex;
+
     [Header("Player")]
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private Transform respawnPoint;
@@ -35,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        currentLevelIndex = SceneManager.GetActiveScene().buildIndex;
         CollecteFruitsInfo();
     }
 
@@ -68,5 +74,29 @@ public class GameManager : MonoBehaviour
         Vector3 newPosition = target.position;
         yield return new WaitForSeconds(delay);
         GameObject newObject = Instantiate(prefab, newPosition, Quaternion.identity);   
+    }
+    private void LoadTheEndScene() => SceneManager.LoadScene("TheEnd");
+    private void LoadNextScene()
+    {
+        int nextLevelIndex = currentLevelIndex + 1;
+
+        SceneManager.LoadScene("Level_" + nextLevelIndex);
+    }
+
+    public void LevelFinished()
+    {
+        UI_FadeEffect fadeEffect = UI_Ingame.instance.fadeEffect;
+
+        int lastLevelIndex = SceneManager.sceneCountInBuildSettings - 2; //we have MainMenu Scene and TheEnd Scene. So we -2
+        bool noMoreLevels = currentLevelIndex == lastLevelIndex;
+        if (noMoreLevels)
+        {
+            fadeEffect.ScreenFade(1, 1.5f, LoadTheEndScene);
+        }
+        else
+        {
+            fadeEffect.ScreenFade(1, 1.5f, LoadNextScene);
+        }
+        
     }
 }

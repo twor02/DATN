@@ -17,7 +17,7 @@ public class Enemy_Mushroom : Enemies
 
     private void HandleTurnAround()
     {
-        if (!isGroundInFrontDetected || isWallDetected)
+        if (!isGroundInfrontDetected || isWallDetected) 
         {
             Flip();
             idleTimer = idleDuration;

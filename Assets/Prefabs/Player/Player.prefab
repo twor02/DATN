@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4781366559152311832
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3869237624978099341}
+  m_Layer: 7
+  m_Name: EnemyCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3869237624978099341
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4781366559152311832}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.6, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 691306831395309874}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8314921174865231394
 GameObject:
   m_ObjectHideFlags: 0
@@ -12,7 +43,7 @@ GameObject:
   - component: {fileID: 6011175137897286033}
   - component: {fileID: 3515537127895480982}
   - component: {fileID: 5391087757384363658}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,6 +64,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4374546382363641251}
+  - {fileID: 3869237624978099341}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &6011175137897286033
@@ -125,7 +157,18 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 8
+  enemyCheck: {fileID: 3869237624978099341}
+  enemyCheckRadius: 0.5
+  whatIsEnemy:
+    serializedVersion: 2
+    m_Bits: 64
+  animators:
+  - {fileID: 22100000, guid: 373f4390401ccb74588ec442d9d47580, type: 2}
+  - {fileID: 22100000, guid: 0380fe5c302907e48a7a727a98656567, type: 2}
+  - {fileID: 22100000, guid: 4344b5afd1291a8449125a2df48c5db5, type: 2}
+  - {fileID: 22100000, guid: 77395209a6e63c042a5f270b24c88e17, type: 2}
   deathVfx: {fileID: 4033503546450370028, guid: 0799494b06f1c9447a2ed64a6245b3e2, type: 3}
+  skinId: 0
 --- !u!1 &8574280879076433860
 GameObject:
   m_ObjectHideFlags: 0

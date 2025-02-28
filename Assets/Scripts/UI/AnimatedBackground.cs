@@ -26,6 +26,6 @@ public class AnimatedBackground : MonoBehaviour
         if(mesh == null)
             mesh = GetComponent<MeshRenderer>();
 
-        mesh.material.mainTexture = textures[((int)backgroundType)];
+        mesh.sharedMaterial.mainTexture = textures[((int)backgroundType)];
     }
 }

@@ -34,7 +34,7 @@ public class Enemy_Chicken : Enemies
 
     private void HandleTurnAround()
     {
-        if (!isGroundInFrontDetected || isWallDetected)
+        if (!isGroundInfrontDetected || isWallDetected)
         {
             Flip();
             canMove = false;
