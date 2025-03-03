@@ -6,8 +6,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    private UI_Ingame inGameUI;
+
     [Header("Level Managment")]
+    [SerializeField] private float levelTimer;
     [SerializeField] private int currentLevelIndex;
+    private int nextLevelIndex;
 
     [Header("Player")]
     [SerializeField] private GameObject playerPrefab;
@@ -40,14 +44,29 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        inGameUI = UI_Ingame.instance;
+
         currentLevelIndex = SceneManager.GetActiveScene().buildIndex;
+        nextLevelIndex = currentLevelIndex + 1;
+
         CollecteFruitsInfo();
+    }
+
+    private void Update()
+    {
+        levelTimer += Time.deltaTime;
+
+        inGameUI.UpdateTimerUI(levelTimer);
     }
 
     private void CollecteFruitsInfo()
     {
         Fruit[] allFruits = FindObjectsByType<Fruit>(FindObjectsSortMode.None);
         totalFruits = allFruits.Length;
+
+        inGameUI.UpdateFruitUI(fruitsCollected, totalFruits);
+
+        PlayerPrefs.SetInt("Level" + currentLevelIndex + "TotalFruits", totalFruits);
     }
 
     public void UpdateRespawnPoint(Transform newRespawnPoint) => respawnPoint = newRespawnPoint;
@@ -61,7 +80,11 @@ public class GameManager : MonoBehaviour
         GameObject newPlayer = Instantiate(playerPrefab, respawnPoint.position, Quaternion.identity);
         player = newPlayer.GetComponent<Player>();
     }
-    public void AddFruit()  => fruitsCollected++;
+    public void AddFruit()
+    {
+        fruitsCollected++;
+        inGameUI.UpdateFruitUI(fruitsCollected,totalFruits);
+    }
     public bool FruitsHaveRandomLook() => fruitsAreRandom;
 
     public void CreateObject(GameObject prefab, Transform target, float delay = 0)
@@ -75,28 +98,60 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(delay);
         GameObject newObject = Instantiate(prefab, newPosition, Quaternion.identity);   
     }
-    private void LoadTheEndScene() => SceneManager.LoadScene("TheEnd");
-    private void LoadNextScene()
+    public void LevelFinished()
     {
-        int nextLevelIndex = currentLevelIndex + 1;
+        SaveLevelProgression();
+        SaveBestTime();
+        SaveFruitsInfo();
 
-        SceneManager.LoadScene("Level_" + nextLevelIndex);
+        LoadNextScene();
+    }
+    private void SaveFruitsInfo()
+    {
+        int fruitsCollectedBefore = PlayerPrefs.GetInt("Level" + currentLevelIndex + "FruitsCollected");
+
+        if(fruitsCollectedBefore < fruitsCollected)
+            PlayerPrefs.SetInt("Level" + currentLevelIndex + "FruitsCollected", fruitsCollected);
+
+        int totalFruitsBank = PlayerPrefs.GetInt("TotalFruitsAmount");
+        PlayerPrefs.SetInt("TotalFruitsAmount", totalFruitsBank + fruitsCollected);
     }
 
-    public void LevelFinished()
+    private void SaveBestTime()
+    {
+        float lastTime = PlayerPrefs.GetFloat("Level" + currentLevelIndex + "BestTime", 99);
+        if (levelTimer < lastTime)
+            PlayerPrefs.SetFloat("Level" + currentLevelIndex + "BestTime", levelTimer);
+    }
+    private void SaveLevelProgression()
+    {
+        PlayerPrefs.SetInt("Level" + nextLevelIndex + "Unlocked", 1);
+        if (NomoreLevels() == false)
+            PlayerPrefs.SetInt("ContinueLevelNumber", nextLevelIndex);
+    }
+    private void LoadTheEndScene() => SceneManager.LoadScene("TheEnd");
+    private void LoadNextLevel()
+    {
+        SceneManager.LoadScene("Level_" + nextLevelIndex);
+    }
+    public void LoadNextScene()
     {
         UI_FadeEffect fadeEffect = UI_Ingame.instance.fadeEffect;
 
-        int lastLevelIndex = SceneManager.sceneCountInBuildSettings - 2; //we have MainMenu Scene and TheEnd Scene. So we -2
-        bool noMoreLevels = currentLevelIndex == lastLevelIndex;
-        if (noMoreLevels)
+        if (NomoreLevels())
         {
             fadeEffect.ScreenFade(1, 1.5f, LoadTheEndScene);
         }
         else
         {
-            fadeEffect.ScreenFade(1, 1.5f, LoadNextScene);
+            fadeEffect.ScreenFade(1, 1.5f, LoadNextLevel);
         }
-        
+    }
+    private bool NomoreLevels()
+    {
+        int lastLevelIndex = SceneManager.sceneCountInBuildSettings - 2; //we have MainMenu Scene and TheEnd Scene. So we -2
+        bool noMoreLevels = currentLevelIndex == lastLevelIndex;
+
+        return noMoreLevels;
     }
 }
