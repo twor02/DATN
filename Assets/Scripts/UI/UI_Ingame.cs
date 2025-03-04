@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UI_Ingame : MonoBehaviour
 {
@@ -8,6 +9,9 @@ public class UI_Ingame : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private TextMeshProUGUI fruitText;
+
+    [SerializeField] private GameObject pauseUI;
+    private bool isPaused;
 
     private void Awake()
     {
@@ -20,9 +24,35 @@ public class UI_Ingame : MonoBehaviour
         fadeEffect.ScreenFade(0, 1);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+            PauseButton();
+    }
+
     public void UpdateFruitUI(int collectedFruits, int totalFruits)
     {
         fruitText.text = collectedFruits + "/" + totalFruits;
+    }
+    public void PauseButton()
+    {
+        if (isPaused)
+        {
+            pauseUI.SetActive(false);
+            isPaused = false;
+            Time.timeScale = 1;
+        }
+        else
+        {
+            pauseUI.SetActive(true);
+            isPaused = true;
+            Time.timeScale = 0;
+        }
+    }
+
+    public void GoToMainMenuButton()
+    {
+        SceneManager.LoadScene(0);
     }
     public void UpdateTimerUI(float timer)
     {
