@@ -16,6 +16,7 @@ public class Trap_Trampoline : MonoBehaviour
 
         if(player != null)
         {
+            AudioManager.instance.PlaySFX(12);
             player.Push(transform.up * pushPower, duration);
             anim.SetTrigger("activate");
         }

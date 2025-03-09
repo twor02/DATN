@@ -10,6 +10,9 @@ public struct Skin
 }
 public class UI_SkinSelection : MonoBehaviour
 {
+    private UI_LevelSeclection levelSelectionUI;
+    private UI_MainMenu mainMenuUI;
+
     [SerializeField] private Skin[] skinList;
 
     [Header("UI details")]
@@ -25,6 +28,9 @@ public class UI_SkinSelection : MonoBehaviour
     {
         LoadSkinUnlocks();
         UpdateSkinDisplay();
+
+        mainMenuUI = GetComponentInParent<UI_MainMenu>();
+        levelSelectionUI = mainMenuUI.GetComponentInChildren<UI_LevelSeclection>(true);
     }
     private void LoadSkinUnlocks()
     {
@@ -42,8 +48,12 @@ public class UI_SkinSelection : MonoBehaviour
         if (skinList[skinIndex].unlocked == false)
             BuySkin(skinIndex);
         else
+        {
             SkinManager.instance.SetSkinId(skinIndex);
+            mainMenuUI.SwitchUI(levelSelectionUI.gameObject);
+        }
 
+        AudioManager.instance.PlaySFX(4);
         UpdateSkinDisplay();
     }
 
@@ -56,6 +66,7 @@ public class UI_SkinSelection : MonoBehaviour
             skinIndex = 0;
         }
         UpdateSkinDisplay();
+        AudioManager.instance.PlaySFX(4);
     }
     public void PreviousSkin()
     {
@@ -66,6 +77,7 @@ public class UI_SkinSelection : MonoBehaviour
             skinIndex = maxIndex;
         }
         UpdateSkinDisplay();
+        AudioManager.instance.PlaySFX(4);
     }
     private void UpdateSkinDisplay()
     {
@@ -94,7 +106,11 @@ public class UI_SkinSelection : MonoBehaviour
     private void BuySkin(int index)
     {
         if (HaveEnoughFruits(skinList[index].skinPrice) == false)
+        {
+            AudioManager.instance.PlaySFX(6);
             return;
+        }
+        AudioManager.instance.PlaySFX(10);
         string skinName = skinList[skinIndex].skinName;
         skinList[skinIndex].unlocked = true;
 

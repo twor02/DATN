@@ -1,3 +1,4 @@
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,7 +8,14 @@ public class UI_MainMenu : MonoBehaviour
     public string firstLevelName;
 
     [SerializeField] private GameObject[] uiElements;
+
     [SerializeField] private GameObject continueButton;
+
+    [Header("Interactive Camera")]
+    [SerializeField] private MenuCharacter menuCharacter;
+    [SerializeField] private CinemachineCamera cinemachine;
+    [SerializeField] private Transform mainMenuPoint;
+    [SerializeField] private Transform skinSelectionPoint;
     private void Awake()
     {
         fadeEffect = GetComponentInChildren<UI_FadeEffect>();
@@ -28,10 +36,13 @@ public class UI_MainMenu : MonoBehaviour
             ui.SetActive(false);
         }
         uiToEnable.SetActive(true);
+
+        AudioManager.instance.PlaySFX(4);
     }
     public void NewGame()
     {
         fadeEffect.ScreenFade(1, 1.5f, LoadLevelScene);
+        AudioManager.instance.PlaySFX(4);
     }
     private void LoadLevelScene() => SceneManager.LoadScene(firstLevelName);
 
@@ -43,7 +54,22 @@ public class UI_MainMenu : MonoBehaviour
     public void CoutinueGame()
     {
         int levelToLoad = PlayerPrefs.GetInt("ContinueLevelNumber", 0);
+        int difficultyIndex = PlayerPrefs.GetInt("GameDifficulty", 1);
+        int lastSavedSkin = PlayerPrefs.GetInt("lastUsedSkin");
 
+        SkinManager.instance.SetSkinId(lastSavedSkin);
+        DifficultyManager.instance.LoadDifficulty(difficultyIndex);
         SceneManager.LoadScene("Level_" + levelToLoad);
+        AudioManager.instance.PlaySFX(5);
+    }
+    public void MoveCameraToMainMenu()
+    {
+        menuCharacter.MoveTo(mainMenuPoint);
+        cinemachine.Follow = mainMenuPoint;
+    }
+    public void MoveCameraToSkinMenu()
+    {
+        menuCharacter.MoveTo(skinSelectionPoint);
+        cinemachine.Follow = skinSelectionPoint;
     }
 }

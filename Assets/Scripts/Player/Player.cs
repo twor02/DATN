@@ -149,6 +149,7 @@ public class Player : MonoBehaviour
             Enemies newEnemy = enemy.GetComponent<Enemies>();
             if(enemy != null)
             {
+                AudioManager.instance.PlaySFX(1);
                 newEnemy.Die();
                 Jump();
             }
@@ -162,6 +163,8 @@ public class Player : MonoBehaviour
             rb.gravityScale = defaultGravityScale;
             canBeControlled = true;
             cd.enabled = true;
+
+            AudioManager.instance.PlaySFX(11);
         }
         else
         {
@@ -177,6 +180,8 @@ public class Player : MonoBehaviour
         if(transform.position.x < sourceDamageXPosition) knockbackDir = -1;
         if (isKnocked) return;
 
+        AudioManager.instance.PlaySFX(9);
+        CameraManager.instance.ScreenShake(knockbackDir);
         StartCoroutine(KnockBackRroutine());
         rb.linearVelocity = new Vector2(knockbackPower.x * knockbackDir, knockbackPower.y);
     }
@@ -194,6 +199,8 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
+        AudioManager.instance.PlaySFX(0);
+
         GameObject newDeathVfx = Instantiate(deathVfx, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
@@ -280,16 +287,23 @@ public class Player : MonoBehaviour
         CancelCoyoteJump();
     }
 
-    private void Jump() => rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce); //rb.linearVelocityY = jumpForce;
+    private void Jump()
+    {
+        AudioManager.instance.PlaySFX(3);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce); //rb.linearVelocityY = jumpForce;
+    }
     
     private void DoubleJump()
     {
+        AudioManager.instance.PlaySFX(3);
+        StopCoroutine(WallJumpRoutine());
         isWallJumping = false;
         canDoubleJump = false;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, doubleJumpForce);
     }
     private void WallJump()
     {
+        AudioManager.instance.PlaySFX(12);
         canDoubleJump = true;
         rb.linearVelocity = new Vector2(wallJumpForce.x * -facingDir, wallJumpForce.y);
 

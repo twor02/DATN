@@ -8,6 +8,7 @@ public class FinishPoint : MonoBehaviour
         Player player = collision.GetComponent<Player>();
         if (player != null)
         {
+            AudioManager.instance.PlaySFX(2);
             anim.SetTrigger("activate");
             GameManager.instance.LevelFinished();
         }
