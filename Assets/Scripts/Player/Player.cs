@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private DifficultyType gameDifficulty;
+    [SerializeField] private DifficultyType gameDifficulty;
+    [SerializeField] private GameObject fruitDrop;
     private GameManager gameManager;
 
     private Rigidbody2D rb;
@@ -59,6 +60,7 @@ public class Player : MonoBehaviour
     [Header("Player visuals")]
     [SerializeField] private AnimatorOverrideController[] animators;
     [SerializeField] private GameObject deathVfx;
+    [SerializeField] private ParticleSystem dustFx;
    
     private void Awake()
     {
@@ -108,8 +110,11 @@ public class Player : MonoBehaviour
                 Die();
                 gameManager.RestartLevel();
             }
-           else
+            else
+            {
+                ObjectCreator.instance.CreateObject(fruitDrop, transform, true);
                 gameManager.RemoveFruit();
+            }
             return;
         }
         if(gameDifficulty == DifficultyType.Hard)
@@ -234,6 +239,7 @@ public class Player : MonoBehaviour
     }
     private void HandleLanding()
     {
+        dustFx.Play();
         isAirborne = false;
         canDoubleJump = true;
 
@@ -289,12 +295,14 @@ public class Player : MonoBehaviour
 
     private void Jump()
     {
+        dustFx.Play();
         AudioManager.instance.PlaySFX(3);
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce); //rb.linearVelocityY = jumpForce;
     }
     
     private void DoubleJump()
     {
+        dustFx.Play();
         AudioManager.instance.PlaySFX(3);
         StopCoroutine(WallJumpRoutine());
         isWallJumping = false;
@@ -303,6 +311,7 @@ public class Player : MonoBehaviour
     }
     private void WallJump()
     {
+        dustFx.Play();
         AudioManager.instance.PlaySFX(12);
         canDoubleJump = true;
         rb.linearVelocity = new Vector2(wallJumpForce.x * -facingDir, wallJumpForce.y);

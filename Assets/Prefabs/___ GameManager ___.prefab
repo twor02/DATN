@@ -46,13 +46,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelTimer: 0
   currentLevelIndex: 0
-  playerPrefab: {fileID: 8314921174865231394, guid: 25d3df5efc3c5244c87572ca99375877, type: 3}
-  respawnPoint: {fileID: 0}
-  respawnDelay: 1
-  player: {fileID: 0}
   fruitsAreRandom: 0
   fruitsCollected: 0
   totalFruits: 0
   canReactivate: 0
-  arrowPrefeb: {fileID: 1818249916808747570, guid: b5202fafd5004ac4d80b39c2a9f02be7, type: 3}
   audioManager: {fileID: 727720626970550506, guid: b49e585879ae3d447b9960e78f8ec70a, type: 3}
+  playerManager: {fileID: 6146990969436914885, guid: 52eb9bbeade6da841b0d48758740b863, type: 3}
+  skinManager: {fileID: 2768209351404983207, guid: 2aa3bcdfce44c83428cab2e94c18557d, type: 3}
+  difficultyManager: {fileID: 4376780005330015399, guid: 64ffeb14138c30b48b164f434b362a54, type: 3}
+  objectCreator: {fileID: 7281102028297518197, guid: a4624141e0e59fd41b6fb210eca93978, type: 3}
