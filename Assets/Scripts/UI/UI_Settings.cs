@@ -1,10 +1,13 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UI_Settings : MonoBehaviour
 {
+    [SerializeField] private GameObject firstSelected;
+
     [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private float mixerMultiplier = 25;
 
@@ -20,6 +23,9 @@ public class UI_Settings : MonoBehaviour
 
     private void OnEnable()
     {
+        GetComponentInParent<UI_MainMenu>().UpdateLastSelected(firstSelected);
+        EventSystem.current.SetSelectedGameObject(firstSelected);
+
         sfxSlider.value = PlayerPrefs.GetFloat(sfxParameter, .7f);
         bgmSlider.value = PlayerPrefs.GetFloat(bgmParameter, .7f);
     }

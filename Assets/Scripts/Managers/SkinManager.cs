@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SkinManager : MonoBehaviour
 {
-    public int choosenSkinId;
+    public int[] skinId;
     public static SkinManager instance;
     private void Awake()
     {
@@ -14,6 +14,6 @@ public class SkinManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    public void SetSkinId(int id) => choosenSkinId = id;
-    public int GetSkinId() => choosenSkinId;
+    public void SetSkinId(int id, int playerNumber) => skinId[playerNumber] = id;
+    public int GetSkinId(int playerNumber) => skinId[playerNumber];
 }

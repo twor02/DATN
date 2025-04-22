@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows;
 
@@ -7,7 +9,7 @@ public class Enemies : MonoBehaviour
     protected Animator anim;
     protected Rigidbody2D rb;
     protected Collider2D[] colliders;
-    protected Transform player;
+    protected List<Player> playerList;
     
 
     [Header("General info")]
@@ -54,12 +56,12 @@ public class Enemies : MonoBehaviour
         }
 
         PlayerManager.OnPlayerRespawn += UpdatePlayersRef;
+        PlayerManager.OnPlayerDeath += UpdatePlayersRef;
     }
 
     private void UpdatePlayersRef()
     {
-        if (player == null)
-            player = PlayerManager.instance.player.transform;
+        playerList = PlayerManager.instance.GetPlayerList();
     }
 
     protected virtual void Update()
@@ -91,6 +93,8 @@ public class Enemies : MonoBehaviour
         }
 
         PlayerManager.OnPlayerRespawn -= UpdatePlayersRef;
+        PlayerManager.OnPlayerDeath -= UpdatePlayersRef;
+
         Destroy(gameObject, 10);
     }
     private void HandleDeathRotation()

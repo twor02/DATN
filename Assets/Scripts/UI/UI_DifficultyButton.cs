@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_DifficultyButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class UI_DifficultyButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
     [SerializeField] private TextMeshProUGUI difficultyInfo;
 
@@ -15,6 +15,16 @@ public class UI_DifficultyButton : MonoBehaviour, IPointerEnterHandler, IPointer
     }
 
     public void OnPointerExit(PointerEventData eventData)
+    {
+        difficultyInfo.text = "";
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        difficultyInfo.text = description;
+    }
+
+    public void OnDeselect(BaseEventData eventData)
     {
         difficultyInfo.text = "";
     }

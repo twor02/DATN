@@ -5,6 +5,7 @@ public class Enemy_Chicken : Enemies
     [Header("Chicken details")]
     [SerializeField] private float aggroDuration;
 
+    private Transform player;
     private float aggroTimer;
     private bool canFlip = true;
     protected override void Update()
@@ -31,7 +32,6 @@ public class Enemy_Chicken : Enemies
         if (isGrounded)
             HandleTurnAround();
     }
-
     private void HandleTurnAround()
     {
         if (!isGroundInfrontDetected || isWallDetected)
@@ -41,16 +41,14 @@ public class Enemy_Chicken : Enemies
             rb.linearVelocity = Vector2.zero;
         }
     }
-
     private void HandleMovement()
     {
         if (canMove == false) return;
 
-        HandleFlip(player.transform.position.x);
+        HandleFlip(player.position.x);
         //kiem soat toc do chicken
         rb.linearVelocity = new Vector2(moveSpeed * facingDir, rb.linearVelocity.y);
     }
-
     protected override void HandleFlip(float xValue)
     {
         if (xValue < transform.position.x && facingRight || xValue > transform.position.x && !facingRight)
@@ -63,12 +61,27 @@ public class Enemy_Chicken : Enemies
             }
         }
     }
-
     protected override void Flip()
     {
         base.Flip();
         canFlip = true;
+
+        FindClosestPLayer();
     }
 
-   
+    private void FindClosestPLayer()
+    {
+        float closestDistancce = float.MaxValue;
+
+        foreach (Player p in playerList)
+        {
+            float distanceToPlayer = Vector2.Distance(transform.position, p.transform.position);
+
+            if (distanceToPlayer < closestDistancce)
+            {
+                closestDistancce = distanceToPlayer;
+                player = p.transform;
+            }
+        }
+    }
 }

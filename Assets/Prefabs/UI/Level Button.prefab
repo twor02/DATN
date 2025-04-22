@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 3626546862689138714}
   - component: {fileID: 1657564725474569955}
   - component: {fileID: 8957267520239753377}
+  - component: {fileID: 1185504121268215908}
   m_Layer: 5
   m_Name: Level Button
   m_TagString: Untagged
@@ -239,7 +240,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 0.814852, b: 0, a: 1}
     m_HighlightedColor: {r: 1, g: 0.6614557, b: 0, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 1, g: 0.76862746, b: 0.54901963, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -288,6 +289,18 @@ MonoBehaviour:
   bestTimeText: {fileID: 4540680947326661630}
   fruitsText: {fileID: 7330028101170140272}
   sceneName: 
+--- !u!114 &1185504121268215908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4799156918552824327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d556c07a3bb03845b5019dee9fbc478, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5466247430820830762
 GameObject:
   m_ObjectHideFlags: 0

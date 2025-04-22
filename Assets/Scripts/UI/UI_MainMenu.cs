@@ -1,9 +1,14 @@
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
+using UnityEditor;
 
 public class UI_MainMenu : MonoBehaviour
 {
+    [SerializeField] private GameObject lastSelected;
+    private DefaultInputActions defaultInput;
     private UI_FadeEffect fadeEffect;
     public string firstLevelName;
 
@@ -19,15 +24,39 @@ public class UI_MainMenu : MonoBehaviour
     private void Awake()
     {
         fadeEffect = GetComponentInChildren<UI_FadeEffect>();
+
+        defaultInput = new DefaultInputActions();
     }
 
     private void Start()
     {
-        if (HasLevelProgression())
-        {
-            continueButton.SetActive(true);
-        }
+        //if (HasLevelProgression())
+        //{
+        //    continueButton.SetActive(true);
+        //}
         fadeEffect.ScreenFade(0, 1.5f);
+    }
+
+    private void OnEnable()
+    {
+        defaultInput.Enable();
+        defaultInput.UI.Navigate.performed += ctx => UpdateSelected();
+    }
+
+    private void OnDisable()
+    {
+        defaultInput.Disable();
+        defaultInput.UI.Navigate.performed -= ctx => UpdateSelected();
+    }
+
+    public void UpdateLastSelected(GameObject newLastSelected)
+    {
+        lastSelected = newLastSelected;
+    }
+    private void UpdateSelected()
+    {
+        if (EventSystem.current.currentSelectedGameObject == null)
+            EventSystem.current.SetSelectedGameObject(lastSelected);
     }
     public void SwitchUI(GameObject uiToEnable)
     {
@@ -57,7 +86,7 @@ public class UI_MainMenu : MonoBehaviour
         int difficultyIndex = PlayerPrefs.GetInt("GameDifficulty", 1);
         int lastSavedSkin = PlayerPrefs.GetInt("lastUsedSkin");
 
-        SkinManager.instance.SetSkinId(lastSavedSkin);
+        //SkinManager.instance.SetSkinId(lastSavedSkin);
         DifficultyManager.instance.LoadDifficulty(difficultyIndex);
         SceneManager.LoadScene("Level_" + levelToLoad);
         AudioManager.instance.PlaySFX(5);
@@ -71,5 +100,13 @@ public class UI_MainMenu : MonoBehaviour
     {
         menuCharacter.MoveTo(skinSelectionPoint);
         cinemachine.Follow = skinSelectionPoint;
+    }
+
+    public  void QuitButton()
+    {
+        if(EditorApplication.isPlaying)
+            EditorApplication.isPlaying = false;
+        else
+            Application.Quit();
     }
 }

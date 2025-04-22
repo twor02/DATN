@@ -51,6 +51,8 @@ public class GameManager : MonoBehaviour
 
         CollecteFruitsInfo();
         CreateManagersIfNeeded(); 
+
+        PlayerManager.instance.EnableJoinAndUpdateLifePoints();
     }
 
     private void Update()
@@ -145,7 +147,7 @@ public class GameManager : MonoBehaviour
 
             //SkinManager skinManager = SkinManager.instance;
             //if (skinManager != null)
-                PlayerPrefs.SetInt("lastUsedSkin", SkinManager.instance.GetSkinId());
+                PlayerPrefs.SetInt("lastUsedSkin", SkinManager.instance.GetSkinId(0));
         }
             
     }

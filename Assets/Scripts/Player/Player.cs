@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq.Expressions;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     private Animator anim;
     private CapsuleCollider2D cd;
+
+    public InputActionAsset playerInput { get; private set; }
+    private Vector2 moveInput;
 
     private bool canBeControlled = false;
 
@@ -51,8 +55,6 @@ public class Player : MonoBehaviour
     private bool isAirborne;
     private bool isWallDetected;
 
-    private float xInput;
-    private float yInput;
     
     private bool facingRight = true;
     private int facingDir = 1;
@@ -67,6 +69,8 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         cd = GetComponent<CapsuleCollider2D>();
         anim = GetComponentInChildren<Animator>();
+
+        playerInput = GetComponent<PlayerInput>().actions;
     }
     void Start()
     {
@@ -75,7 +79,7 @@ public class Player : MonoBehaviour
 
         UpdateGameDifficulty();
         RespawnFinished(false);
-        UpdateSkin();
+        //UpdateSkin();
     }
 
     // Update is called once per frame
@@ -93,7 +97,7 @@ public class Player : MonoBehaviour
         if(isKnocked) return;
 
         HandleEnemyDetection();
-        HandleInput();
+        //HandleInput();
         HandleWallSlide();
         HandleMovement();
         HandleFlip();
@@ -108,7 +112,7 @@ public class Player : MonoBehaviour
            if(gameManager.FruitsCollected() <= 0)
             {
                 Die();
-                gameManager.RestartLevel();
+                //gameManager.RestartLevel();
             }
             else
             {
@@ -120,7 +124,7 @@ public class Player : MonoBehaviour
         if(gameDifficulty == DifficultyType.Hard)
         {
             Die();
-            gameManager.RestartLevel();
+            //gameManager.RestartLevel();
         }
     }
 
@@ -132,7 +136,7 @@ public class Player : MonoBehaviour
             gameDifficulty = difficultyManager.difficulty;
     }
 
-    public void UpdateSkin()
+    public void UpdateSkin(int skinIndex)
     {
         SkinManager skinManager = SkinManager.instance;
 
@@ -140,7 +144,7 @@ public class Player : MonoBehaviour
         {
             return;
         }
-        anim.runtimeAnimatorController = animators[skinManager.choosenSkinId];
+        GetComponentInChildren<Animator>().runtimeAnimatorController = animators[skinIndex];
     }
 
     private void HandleEnemyDetection()
@@ -248,14 +252,14 @@ public class Player : MonoBehaviour
 
     private void HandleInput()
     {
-        xInput = Input.GetAxisRaw("Horizontal");
-        yInput = Input.GetAxisRaw("Vertical");
+        //xInput = Input.GetAxisRaw("Horizontal");
+        //yInput = Input.GetAxisRaw("Vertical");
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            JumpButton();
-            RequestBufferJump();
-        }
+        //if (Input.GetKeyDown(KeyCode.Space))
+        //{
+        //    JumpButton();
+        //    RequestBufferJump();
+        //}
     }
 
     #region Buffer & Coyote Jump
@@ -324,7 +328,7 @@ public class Player : MonoBehaviour
     private void HandleWallSlide()
     {
         bool canWallSlide = isWallDetected && rb.linearVelocity.y < 0;
-        float yModifier = yInput < 0 ? 1 : 0.5f;
+        float yModifier = moveInput.y < 0 ? 1 : 0.5f;
 
         if (canWallSlide == false)
         {
@@ -350,7 +354,7 @@ public class Player : MonoBehaviour
         if (isWallDetected) return;
         if (isWallJumping) return;
 
-        rb.linearVelocity = new Vector2(xInput * speed,rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(moveInput.x * speed,rb.linearVelocity.y);
         //rb.linearVelocityX = xInput * speed;
     }
 
@@ -361,10 +365,9 @@ public class Player : MonoBehaviour
         anim.SetBool("isGrounded", isGrounded);
         anim.SetBool("isWallDetected", isWallDetected);
     }
-
     private void HandleFlip()
     {
-        if (xInput < 0 && facingRight || xInput > 0 && !facingRight)
+        if (moveInput.x < 0 && facingRight || moveInput.x > 0 && !facingRight)
         {
             Flip();
         }
@@ -376,11 +379,39 @@ public class Player : MonoBehaviour
         transform.Rotate(0, 180, 0);
         facingRight = !facingRight;
     }
-
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(enemyCheck.position, enemyCheckRadius);
         Gizmos.DrawLine(transform.position, new Vector2(transform.position.x, transform.position.y - groundCheckDistance));
         Gizmos.DrawLine(transform.position, new Vector2(transform.position.x + (wallCheckDistance * facingDir), transform.position.y));
+    }
+    private void OnEnable()
+    {
+        playerInput.Enable();
+        playerInput.FindAction("Jump").performed += OnJumpPerformed;
+        playerInput.FindAction("Movement").performed += OnMovementPerformed;
+        playerInput.FindAction("Movement").canceled += OnMovementCanceled;
+    }
+
+    private void OnDisable()
+    {
+        playerInput.Disable();
+        playerInput.FindAction("Jump").performed -= OnJumpPerformed;
+        playerInput.FindAction("Movement").performed -= OnMovementPerformed;
+        playerInput.FindAction("Movement").canceled -= OnMovementCanceled;
+    }
+
+    private void OnJumpPerformed(InputAction.CallbackContext context)
+    {
+        JumpButton();
+        AttemptBufferJump();
+    }
+    private void OnMovementPerformed(InputAction.CallbackContext context)
+    {
+        moveInput = context.ReadValue<Vector2>();   
+    }
+    private void OnMovementCanceled(InputAction.CallbackContext context)
+    {
+        moveInput = Vector2.zero;
     }
 }

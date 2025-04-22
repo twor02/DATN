@@ -1,8 +1,9 @@
 using UnityEngine;
 
-public class LevelCameraTrigger : MonoBehaviour
+public class LevelCameraView : MonoBehaviour
 {
     private LevelCamera levelCamera;
+    private int playersInView;
 
     private void Awake()
     {
@@ -13,8 +14,11 @@ public class LevelCameraTrigger : MonoBehaviour
         Player player = collision.GetComponent<Player>();
         if (player != null)
         {
-            levelCamera.EnableCamera(true);
-            levelCamera.SetNewTarget(player.transform);
+            playersInView++;
+            if(playersInView >= levelCamera.playerList.Count)
+            {
+                levelCamera.ChangeCameraLensSize(levelCamera.minCameraSize);
+            }
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
@@ -22,7 +26,11 @@ public class LevelCameraTrigger : MonoBehaviour
         Player player = collision.GetComponent<Player>();
         if (player != null)
         {
-            levelCamera.EnableCamera(false);
+            playersInView--;
+            if (playersInView < levelCamera.playerList.Count)
+            {
+                levelCamera.ChangeCameraLensSize(levelCamera.maxCameraSize);
+            }
         }
     }
 }
