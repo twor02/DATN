@@ -7,6 +7,7 @@ public class ObjectCreator : MonoBehaviour
 
     [Header("Traps")]
     public GameObject arrowPrefeb;
+    public GameObject fallingPlatformPrefab;
 
     private void Awake()
     {

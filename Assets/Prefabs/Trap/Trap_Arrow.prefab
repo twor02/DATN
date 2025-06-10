@@ -160,7 +160,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c91070647ad716c438be289ad7f980bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pushPower: 25
+  pushPower: 30
   duration: 0.5
   rotationRight: 1
   cooldown: 1.5

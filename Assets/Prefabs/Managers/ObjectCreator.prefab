@@ -45,3 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arrowPrefeb: {fileID: 1818249916808747570, guid: b5202fafd5004ac4d80b39c2a9f02be7, type: 3}
+  fallingPlatformPrefab: {fileID: 925603266551122820, guid: e2ff9681b753ebd4a8c9e6eff3d8ac87, type: 3}

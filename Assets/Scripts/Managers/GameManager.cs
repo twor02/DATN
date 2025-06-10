@@ -115,6 +115,11 @@ public class GameManager : MonoBehaviour
    
     public void LevelFinished()
     {
+
+        string dateKey = "Level" + currentLevelIndex + "DateCompleted";
+        string currentDate = System.DateTime.Now.ToString("dd/MM/yyyy");
+        PlayerPrefs.SetString(dateKey, currentDate);
+        PlayerPrefs.Save();
         SaveLevelProgression();
         SaveBestTime();
         SaveFruitsInfo();

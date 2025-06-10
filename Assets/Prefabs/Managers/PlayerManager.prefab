@@ -45,8 +45,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 609ffeaa0c4f30b4abcdabe56b3bb4eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectsToDisable:
-  - {fileID: 0}
   lifePoints: 2
   maxPlayerCount: 2
   playerCountWinCondition: 0

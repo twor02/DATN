@@ -46,8 +46,8 @@ public class UI_Ingame : MonoBehaviour
     {
         fadeEffect.ScreenFade(0, 1);
 
-        GameObject pressJoinText = FindFirstObjectByType<UI_TextBlinkEffect>().gameObject;
-        PlayerManager.instance.objectsToDisable.Add(pressJoinText);
+        //GameObject pressJoinText = FindFirstObjectByType<UI_TextBlinkEffect>().gameObject;
+        //PlayerManager.instance.objectsToDisable.Add(pressJoinText);
     }
 
     public void UpdateFruitUI(int collectedFruits, int totalFruits)

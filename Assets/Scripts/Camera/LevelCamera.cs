@@ -1,4 +1,4 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
@@ -36,10 +36,28 @@ public class LevelCamera : MonoBehaviour
         UpdateLensSizeIfNeeded();
     }
 
+    //private void UpdateCameraStatus()
+    //{
+    //    playerList = PlayerManager.instance.GetPlayerList();
+    //    if(playerList.Count > 1)
+    //    {
+    //        SetNewTarget(cameraCenterPoint);
+
+    //        player1 = playerList[0].transform;
+    //        player2 = playerList[1].transform;
+    //        cameraFocusOnCenter = true;
+    //    }
+    //    else
+    //    {
+    //        cameraFocusOnCenter = false;
+    //        SetNewTarget(playerList[0].transform);
+    //    }
+    //}
     private void UpdateCameraStatus()
     {
         playerList = PlayerManager.instance.GetPlayerList();
-        if(playerList.Count > 1)
+
+        if (playerList.Count >= 2)
         {
             SetNewTarget(cameraCenterPoint);
 
@@ -47,12 +65,18 @@ public class LevelCamera : MonoBehaviour
             player2 = playerList[1].transform;
             cameraFocusOnCenter = true;
         }
-        else
+        else if (playerList.Count == 1)
         {
             cameraFocusOnCenter = false;
             SetNewTarget(playerList[0].transform);
         }
+        else
+        {
+            cameraFocusOnCenter = false;
+            SetNewTarget(null);
+        }
     }
+
     public void UpdateCenterPointPosition()
     {
         if (cameraActive == false)

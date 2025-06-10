@@ -2420,10 +2420,6 @@ MonoBehaviour:
   - skinName: Pink Man
     skinPrice: 100
     unlocked: 0
-  currentSkinIndex: 0
-  skinIndex: 
-  maxPlayerIndex: 0
-  currentPlayerIndex: 0
   skinDisplay: {fileID: 1811382449}
   buySelectText: {fileID: 181242218}
   priceText: {fileID: 283084515}
@@ -10478,12 +10474,12 @@ MonoBehaviour:
   m_Padding:
     m_Left: 150
     m_Right: 0
-    m_Top: 30
-    m_Bottom: 30
+    m_Top: 80
+    m_Bottom: 80
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 250, y: 100}
+  m_CellSize: {x: 350, y: 200}
   m_Spacing: {x: 25, y: 15}
   m_Constraint: 0
   m_ConstraintCount: 2

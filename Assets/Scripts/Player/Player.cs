@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Linq.Expressions;
 using UnityEngine;
@@ -41,6 +41,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float knockbackDuration = 1;
     [SerializeField] private Vector2 knockbackPower;
     private bool isKnocked;
+    private Coroutine knockbackRoutine;
 
     [Header("Collision")]
     [SerializeField] private float groundCheckDistance;
@@ -50,12 +51,12 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform enemyCheck;
     [SerializeField] private float enemyCheckRadius;
     [SerializeField] private LayerMask whatIsEnemy;
-    
+
     private bool isGrounded;
     private bool isAirborne;
     private bool isWallDetected;
 
-    
+
     private bool facingRight = true;
     private int facingDir = 1;
 
@@ -63,7 +64,7 @@ public class Player : MonoBehaviour
     [SerializeField] private AnimatorOverrideController[] animators;
     [SerializeField] private GameObject deathVfx;
     [SerializeField] private ParticleSystem dustFx;
-   
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -94,7 +95,7 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if(isKnocked) return;
+        if (isKnocked) return;
 
         HandleEnemyDetection();
         //HandleInput();
@@ -109,7 +110,7 @@ public class Player : MonoBehaviour
     {
         if (gameDifficulty == DifficultyType.Normal)
         {
-           if(gameManager.FruitsCollected() <= 0)
+            if (gameManager.FruitsCollected() <= 0)
             {
                 Die();
                 //gameManager.RestartLevel();
@@ -121,7 +122,7 @@ public class Player : MonoBehaviour
             }
             return;
         }
-        if(gameDifficulty == DifficultyType.Hard)
+        if (gameDifficulty == DifficultyType.Hard)
         {
             Die();
             //gameManager.RestartLevel();
@@ -140,7 +141,7 @@ public class Player : MonoBehaviour
     {
         SkinManager skinManager = SkinManager.instance;
 
-        if(skinManager == null)
+        if (skinManager == null)
         {
             return;
         }
@@ -149,14 +150,14 @@ public class Player : MonoBehaviour
 
     private void HandleEnemyDetection()
     {
-        if(rb.linearVelocity.y >= 0) return;
+        if (rb.linearVelocity.y >= 0) return;
 
         Collider2D[] colliders = Physics2D.OverlapCircleAll(enemyCheck.position, enemyCheckRadius, whatIsEnemy);
 
         foreach (var enemy in colliders)
         {
             Enemies newEnemy = enemy.GetComponent<Enemies>();
-            if(enemy != null)
+            if (enemy != null)
             {
                 AudioManager.instance.PlaySFX(1);
                 newEnemy.Die();
@@ -183,19 +184,39 @@ public class Player : MonoBehaviour
         }
     }
 
+    //public void KnockBack(float sourceDamageXPosition)
+    //{
+    //    float knockbackDir = 1;
+    //    if (transform.position.x < sourceDamageXPosition) knockbackDir = -1;
+    //    if (isKnocked) return;
+
+    //    AudioManager.instance.PlaySFX(9);
+    //    CameraManager.instance.ScreenShake(knockbackDir);
+    //    StartCoroutine(KnockBackRroutine());
+    //    rb.linearVelocity = new Vector2(knockbackPower.x * knockbackDir, knockbackPower.y);
+    //}
+
     public void KnockBack(float sourceDamageXPosition)
     {
-        float knockbackDir = 1;
-        if(transform.position.x < sourceDamageXPosition) knockbackDir = -1;
         if (isKnocked) return;
+
+        isKnocked = true;
+
+        float knockbackDir = (transform.position.x < sourceDamageXPosition) ? -1 : 1;
 
         AudioManager.instance.PlaySFX(9);
         CameraManager.instance.ScreenShake(knockbackDir);
-        StartCoroutine(KnockBackRroutine());
-        rb.linearVelocity = new Vector2(knockbackPower.x * knockbackDir, knockbackPower.y);
+
+        rb.linearVelocity = Vector2.zero;
+        rb.AddForce(new Vector2(knockbackPower.x * knockbackDir, knockbackPower.y), ForceMode2D.Impulse);
+
+        if (knockbackRoutine != null)
+            StopCoroutine(knockbackRoutine);
+
+        knockbackRoutine = StartCoroutine(KnockBackRoutine());
     }
 
-    private IEnumerator KnockBackRroutine()
+    private IEnumerator KnockBackRoutine()
     {
         isKnocked = true;
         anim.SetBool("isKnocked", true);
@@ -269,7 +290,7 @@ public class Player : MonoBehaviour
     }
     private void AttemptBufferJump()
     {
-        if(Time.time < bufferJumpActivated + bufferJumpWindow)
+        if (Time.time < bufferJumpActivated + bufferJumpWindow)
         {
             bufferJumpActivated = Time.time - 1;
             Jump();
@@ -303,7 +324,7 @@ public class Player : MonoBehaviour
         AudioManager.instance.PlaySFX(3);
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce); //rb.linearVelocityY = jumpForce;
     }
-    
+
     private void DoubleJump()
     {
         dustFx.Play();
@@ -354,7 +375,7 @@ public class Player : MonoBehaviour
         if (isWallDetected) return;
         if (isWallJumping) return;
 
-        rb.linearVelocity = new Vector2(moveInput.x * speed,rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(moveInput.x * speed, rb.linearVelocity.y);
         //rb.linearVelocityX = xInput * speed;
     }
 
@@ -408,10 +429,12 @@ public class Player : MonoBehaviour
     }
     private void OnMovementPerformed(InputAction.CallbackContext context)
     {
-        moveInput = context.ReadValue<Vector2>();   
+        moveInput = context.ReadValue<Vector2>();
     }
     private void OnMovementCanceled(InputAction.CallbackContext context)
     {
         moveInput = Vector2.zero;
     }
+  
+
 }

@@ -13,7 +13,7 @@ public class PlayerManager : MonoBehaviour
     public PlayerInputManager playerInputManager {  get; private set; }
     public static PlayerManager instance;
 
-    public List<GameObject> objectsToDisable;
+    //public List<GameObject> objectsToDisable;
 
     public int lifePoints;
     public int maxPlayerCount = 1;
@@ -37,6 +37,8 @@ public class PlayerManager : MonoBehaviour
         
     }
 
+
+    //them 2nd player
     private void PlaceNewPlayerAtRespawnPoint(Transform newPlayer)
     {
         if (respawnPoint == null)
@@ -52,10 +54,7 @@ public class PlayerManager : MonoBehaviour
         playerInputManager.onPlayerJoined += AddPlayer;
         playerInputManager.onPlayerLeft += RemovePlayer;
 
-        foreach (var gameObject in objectsToDisable)
-        {
-            gameObject.SetActive(false);
-        }
+       
     }
 
     private void OnDisable()
@@ -90,10 +89,7 @@ public class PlayerManager : MonoBehaviour
 
         playerScript.UpdateSkin(newPlayerSkinId);
         
-        foreach (var gameObject in objectsToDisable)
-        {
-            gameObject.SetActive(false);
-        }
+       
     }
 
     private int GetPlayerNumber(PlayerInput newPlayer)

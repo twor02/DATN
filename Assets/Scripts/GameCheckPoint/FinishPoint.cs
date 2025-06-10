@@ -11,6 +11,12 @@ public class FinishPoint : MonoBehaviour
             return true;
         return false;
     }
+    private bool CompareFruit()
+    {
+        if(GameManager.instance.fruitsCollected == GameManager.instance.totalFruits) 
+            return true;
+        return false;
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Player player = collision.GetComponent<Player>();
@@ -20,8 +26,11 @@ public class FinishPoint : MonoBehaviour
             AudioManager.instance.PlaySFX(2);
             anim.SetTrigger("activate");
 
-            if(CanFinishLevel())
+            if(CanFinishLevel() && CompareFruit())
+            {
                 GameManager.instance.LevelFinished();
+            }
+
         }
 
     }

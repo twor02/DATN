@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -34,15 +35,18 @@ public class UI_LevelSeclection : MonoBehaviour
     private void CreateLevelButtons()
     {
         int levelAmount = SceneManager.sceneCountInBuildSettings - 1;
-
-        for(int i = 1;  i < levelAmount; i++)
-        {
-            if(IsLevelUnlocked(i) == false)
-                return;
-
-            UI_LevelButton newButton = Instantiate(buttonPrefab, buttonsParent);
-            newButton.SetupButton(i);
-        }
+      
+       
+            for (int i = 1; i < levelAmount; i++)
+            {
+                if (IsLevelUnlocked(i) == false)
+                    return;
+            
+                UI_LevelButton newButton = Instantiate(buttonPrefab, buttonsParent);
+                newButton.SetupButton(i);  
+            }
+        
+       
     }
     private bool IsLevelUnlocked(int levelIndex) => levelsUnlocked[levelIndex];
     private void LoadLevelsInfo()
